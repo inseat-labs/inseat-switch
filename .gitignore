@@ -1,0 +1,21 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Tool output
+.cache/
+.inseat-switch/
+artifacts/
+reports/
+*.log
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/
