@@ -3,8 +3,9 @@
 Inseat Switch is a planned model-migration compatibility checker for developers
 who need to compare a baseline model with a candidate model on their own workflow.
 
-> Status: planning phase. This repository is not usable yet. It has no CLI,
-> package, runtime implementation, or live evaluation service.
+> Status: early development (Milestone 0 starter). An offline CLI exists that
+> compares saved baseline/candidate responses against synthetic fixtures. There
+> are no live model adapters, no hosted service, and no published npm package yet.
 
 The goal is to make model changes reviewable before rollout. A future evaluation
 will replay representative workflow fixtures against saved responses first, and
@@ -33,15 +34,49 @@ that workflow's contract.
 5. Optionally enable live adapters after costs, credentials, and data handling are
    understood.
 
-No commands are documented because no executable software exists yet. See
-[ROADMAP.md](ROADMAP.md) for acceptance criteria and
-[docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md) for the proposed product boundary.
+## Quick start (offline)
+
+Requires Node.js 22 or newer.
+
+```bash
+git clone https://github.com/inseat-labs/inseat-switch.git
+cd inseat-switch
+npm ci
+npm test
+npm run check:examples
+```
+
+`check:examples` runs the CLI against the synthetic fixtures in
+`examples/fixtures/` and prints `PASS`, `FAIL`, or `SKIP` (not-tested) per check.
+Add `-- --json` for the machine-readable report. The process exits `1` when any
+check fails, which makes it usable as a CI gate.
+
+Everything runs offline. No provider credentials, network calls, or paid API usage
+are involved. See [ROADMAP.md](ROADMAP.md) for acceptance criteria and
+[docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md) for the product boundary.
+
+## Fixture format (v1)
+
+A fixture is one JSON file describing one workflow case:
+
+| Field | Purpose |
+| --- | --- |
+| `baseline`, `candidate` | Provider and model identifiers for labeling. |
+| `messages` | The conversation the models were given. |
+| `tools` | Tool definitions with JSON Schema `parameters`. |
+| `expectations.requiredTool` | The tool the workflow requires. Falls back to the baseline's first tool call. |
+| `expectations.outputSchema` | JSON Schema the candidate's text output must satisfy. |
+| `checks` | Any of `tool-name`, `tool-arguments`, `structured-output`. |
+| `responses.baseline`, `responses.candidate` | Saved responses in `generic-v1`, `openai-chat-v1`, or `unavailable` format. |
+
+Missing evidence produces `not-tested`, never an implicit `pass`. See
+[examples/README.md](examples/README.md) for the scenario table.
 
 ## Planned architecture
 
-The eventual implementation is planned as one TypeScript repository with focused
-packages for config schema, fixtures, adapters, checks, runner, and report
-generation. See [ARCHITECTURE.md](ARCHITECTURE.md).
+The implementation is one TypeScript package with focused modules under `src/`
+for config schema, fixtures, adapters, checks, runner, report generation, and the
+CLI. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Project documents
 
@@ -49,8 +84,9 @@ generation. See [ARCHITECTURE.md](ARCHITECTURE.md).
 - [ROADMAP.md](ROADMAP.md): milestones and acceptance criteria
 - [docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md): users, jobs, risks, and boundaries
 - [docs/RESEARCH.md](docs/RESEARCH.md): source-backed context and hypotheses
-- [examples/README.md](examples/README.md): planned fixture examples
-- [CONTRIBUTING.md](CONTRIBUTING.md): documentation contributions during planning
+- [examples/README.md](examples/README.md): synthetic fixture examples
+- [docs/HANDOFF.md](docs/HANDOFF.md): implementation state and next steps
+- [CONTRIBUTING.md](CONTRIBUTING.md): how to contribute
 - [SECURITY.md](SECURITY.md): private vulnerability reporting
 
 ## License and independence

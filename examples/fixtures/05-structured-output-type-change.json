@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "structured-output-type-change",
+  "description": "Synthetic. Candidate returns total as a string where a number is required. Expected: fail.",
+  "baseline": { "provider": "example", "model": "baseline-model-2025" },
+  "candidate": { "provider": "example", "model": "candidate-model-2026" },
+  "messages": [
+    { "role": "system", "content": "Reply with JSON only: {\"orderId\": string, \"total\": number, \"currency\": string}." },
+    { "role": "user", "content": "Summarize order ORD-123456." }
+  ],
+  "tools": [],
+  "expectations": {
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "total": { "type": "number" },
+        "currency": { "type": "string", "minLength": 3, "maxLength": 3 }
+      },
+      "required": ["orderId", "total", "currency"],
+      "additionalProperties": false
+    }
+  },
+  "checks": ["structured-output"],
+  "responses": {
+    "baseline": { "format": "generic-v1", "text": "{\"orderId\":\"ORD-123456\",\"total\":42.5,\"currency\":\"USD\"}" },
+    "candidate": { "format": "generic-v1", "text": "{\"orderId\":\"ORD-123456\",\"total\":\"42.50\",\"currency\":\"USD\"}" }
+  }
+}

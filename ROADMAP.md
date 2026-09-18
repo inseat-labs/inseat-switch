@@ -1,8 +1,11 @@
 # Roadmap
 
-All milestones are plans. No milestone is implemented today.
+Milestone 0 has a working starter implementation (see docs/HANDOFF.md). Later
+milestones are plans.
 
 ## Milestone 0: Offline compatibility core
+
+Status: mostly implemented. Workflow-precondition checks remain open.
 
 Acceptance criteria:
 

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "name": "candidate-evidence-unavailable",
+  "description": "Synthetic. The candidate capture has no supported tool-call data. Expected: not-tested, never pass.",
+  "baseline": { "provider": "example", "model": "baseline-model-2025" },
+  "candidate": { "provider": "example", "model": "candidate-model-2026" },
+  "messages": [
+    { "role": "system", "content": "You are a support assistant. Always look up the order before answering." },
+    { "role": "user", "content": "Where is my order ORD-123456?" }
+  ],
+  "tools": [{
+      "name": "lookup_order",
+      "description": "Fetch an order by its identifier before answering questions about it.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string", "pattern": "^ORD-[0-9]{6}$" },
+          "includeItems": { "type": "boolean" }
+        },
+        "required": ["orderId"],
+        "additionalProperties": false
+      }
+    }],
+  "expectations": { "requiredTool": "lookup_order" },
+  "checks": ["tool-name", "tool-arguments"],
+  "responses": {
+    "baseline": {
+      "format": "generic-v1",
+      "toolCalls": [{ "name": "lookup_order", "arguments": { "orderId": "ORD-123456" } }]
+    },
+    "candidate": {
+      "format": "unavailable",
+      "reason": "provider capture did not include tool-call blocks for this response"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@inseat-labs/inseat-switch",
+  "version": "0.0.0",
+  "description": "Offline model-migration compatibility checker: shows what breaks in an LLM workflow when the model changes.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "inseat-switch": "./dist/cli/main.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsx src/cli/main.ts",
+    "check:examples": "tsx src/cli/main.ts check examples/fixtures/*.json",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inseat-labs/inseat-switch.git"
+  },
+  "homepage": "https://inseat.app",
+  "keywords": [
+    "llm",
+    "model-migration",
+    "tool-calling",
+    "evaluation",
+    "compatibility"
+  ],
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.5",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  }
+}

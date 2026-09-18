@@ -1,11 +1,25 @@
 # Contributing
 
-Inseat Switch is in a documentation-only planning phase. There is no package to
-install, executable command to run, or test suite yet.
+Inseat Switch is in early development. A Milestone 0 offline checker exists.
 
-Current contributions should improve product definitions, architecture decisions,
-research accuracy, threat modeling, fixture design, or milestone acceptance
-criteria. Please keep proposals scoped and distinguish:
+## Development
+
+```bash
+npm ci
+npm test            # vitest
+npm run typecheck   # tsc --noEmit
+npm run build       # emits dist/
+npm run dev -- check examples/fixtures/*.json
+```
+
+Add a test for every new check, adapter format, or fixture field. A new check must
+return `not-tested` with a stable `reasonCode` whenever its evidence is missing.
+New example fixtures must be synthetic and state their expected result in
+`description`, and `tests/examples.test.ts` must assert it.
+
+Contributions that improve product definitions, architecture decisions, research
+accuracy, threat modeling, or fixture design are equally welcome. Please keep
+proposals scoped and distinguish:
 
 - verified facts, with primary or credible official sources
 - product decisions, with their tradeoffs

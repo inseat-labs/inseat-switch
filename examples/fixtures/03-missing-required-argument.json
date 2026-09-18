@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "name": "missing-required-argument",
+  "description": "Synthetic. Candidate omits the required orderId. Saved in OpenAI chat shape. Expected: fail.",
+  "baseline": { "provider": "example", "model": "baseline-model-2025" },
+  "candidate": { "provider": "example", "model": "candidate-model-2026" },
+  "messages": [
+    { "role": "system", "content": "You are a support assistant. Always look up the order before answering." },
+    { "role": "user", "content": "Where is my order ORD-123456?" }
+  ],
+  "tools": [{
+      "name": "lookup_order",
+      "description": "Fetch an order by its identifier before answering questions about it.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string", "pattern": "^ORD-[0-9]{6}$" },
+          "includeItems": { "type": "boolean" }
+        },
+        "required": ["orderId"],
+        "additionalProperties": false
+      }
+    }],
+  "expectations": { "requiredTool": "lookup_order" },
+  "checks": ["tool-name", "tool-arguments"],
+  "responses": {
+    "baseline": {
+      "format": "openai-chat-v1",
+      "message": {
+        "content": null,
+        "tool_calls": [{ "type": "function", "function": { "name": "lookup_order", "arguments": "{\"orderId\":\"ORD-123456\"}" } }]
+      }
+    },
+    "candidate": {
+      "format": "openai-chat-v1",
+      "message": {
+        "content": null,
+        "tool_calls": [{ "type": "function", "function": { "name": "lookup_order", "arguments": "{\"includeItems\":true}" } }]
+      }
+    }
+  }
+}

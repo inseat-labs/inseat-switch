@@ -1,24 +1,22 @@
-# Planned Architecture
+# Architecture
 
-This document describes a proposed architecture, not an implemented system.
-Inseat Switch is currently documentation only.
+Milestone 0 is implemented as a single TypeScript package. Modules under `src/`
+map to the planned responsibilities; they can be split into workspace packages
+later if the boundaries prove stable.
 
 ## Repository shape
 
-The eventual project is planned as one TypeScript repository containing six
-packages with narrow responsibilities:
+| Module | Responsibility | Status |
+| --- | --- | --- |
+| `src/config` | Zod schemas for model refs, tool definitions, expectations, and project config. | implemented |
+| `src/fixtures` | Fixture schema (v1) and loader with precise validation errors. | implemented |
+| `src/adapters` | Normalize saved responses (`generic-v1`, `openai-chat-v1`, `unavailable`). Live adapters are later and opt-in. | saved only |
+| `src/checks` | `tool-name`, `tool-arguments` (JSON Schema via Ajv 2020-12), `structured-output`. Workflow-precondition checks are not implemented. | partial |
+| `src/runner` | Runs enabled checks for one fixture and summarizes results. | implemented |
+| `src/report` | JSON report (`reportVersion: 1`) and text renderer. | implemented |
+| `src/cli` | `inseat-switch check <fixture>...` with `--json` and `--allow-fail`. | implemented |
 
-| Package | Planned responsibility |
-| --- | --- |
-| `config-schema` | Validate versioned project, model, tool, and check configuration. |
-| `fixtures` | Load prompts, workflow state, tool definitions, and saved responses. |
-| `adapters` | Normalize saved responses and, later, opt-in live provider responses. |
-| `checks` | Evaluate tool choice, tool name, arguments, JSON Schema, and preconditions. |
-| `runner` | Pair baseline and candidate cases and coordinate deterministic checks. |
-| `report` | Emit machine-readable and human-readable `pass`, `fail`, and `not-tested` results. |
-
-Package APIs and directories are intentionally not fixed until Milestone 0 tests
-prove the smallest useful contracts.
+Toolchain: Node.js 22+, TypeScript 5 (`NodeNext` ESM), Zod 4, Ajv 8, Vitest.
 
 ## Data flow
 
