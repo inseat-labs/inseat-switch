@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "name": "outcome-evidence-missing",
+  "description": "Synthetic. An outcome assertion is configured but no outcome record was saved. Expected: not-tested, never pass.",
+  "baseline": { "provider": "example", "model": "baseline-model-2025" },
+  "candidate": { "provider": "example", "model": "candidate-model-2026" },
+  "messages": [{"role":"system","content":"You are a support agent. Refund the order if it is eligible."},{"role":"user","content":"Please refund ORD-123456, it arrived broken."}],
+  "tools": [{"name":"issue_refund","description":"Refund an order.","parameters":{"type":"object","properties":{"orderId":{"type":"string"},"amount":{"type":"number"}},"required":["orderId","amount"],"additionalProperties":false}}],
+  "expectations": { "outcome": { "paths": [{ "path": "order.status", "equals": "refunded" }] } },
+  "checks": ["outcome-assertion"],
+  "responses": { "baseline": {"format":"generic-v1","toolCalls":[{"name":"issue_refund","arguments":{"orderId":"ORD-123456","amount":42.5}}]}, "candidate": {"format":"generic-v1","toolCalls":[{"name":"issue_refund","arguments":{"orderId":"ORD-123456","amount":42.5}}]} }
+}

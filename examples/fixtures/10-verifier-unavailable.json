@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "name": "verifier-unavailable",
+  "description": "Synthetic. The saved verifier result says it could not run. Expected: not-tested (verifier-unavailable).",
+  "baseline": { "provider": "example", "model": "baseline-model-2025" },
+  "candidate": { "provider": "example", "model": "candidate-model-2026" },
+  "messages": [{"role":"system","content":"You are a support agent. Refund the order if it is eligible."},{"role":"user","content":"Please refund ORD-123456, it arrived broken."}],
+  "tools": [{"name":"issue_refund","description":"Refund an order.","parameters":{"type":"object","properties":{"orderId":{"type":"string"},"amount":{"type":"number"}},"required":["orderId","amount"],"additionalProperties":false}}],
+  "expectations": { "outcome": { "verifiers": [{ "kind": "command-exit-code", "name": "refund-smoke", "expect": "pass" }] } },
+  "checks": ["outcome-assertion"],
+  "responses": { "baseline": {"format":"generic-v1","toolCalls":[{"name":"issue_refund","arguments":{"orderId":"ORD-123456","amount":42.5}}]}, "candidate": {"format":"generic-v1","toolCalls":[{"name":"issue_refund","arguments":{"orderId":"ORD-123456","amount":42.5}}]} },
+  "outcomeEvidence": {
+    "candidate": { "verifiers": [{ "kind": "command-exit-code", "name": "refund-smoke", "status": "unavailable", "detail": "staging environment unreachable" }] }
+  }
+}

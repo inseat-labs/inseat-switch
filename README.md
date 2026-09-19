@@ -16,8 +16,9 @@ later against explicitly enabled live model adapters. Reports are planned to sho
 - tool arguments and JSON Schema compatibility
 - workflow preconditions
 
-Inseat Switch is not a general model benchmark, model router, or agent
-orchestrator. It is also distinct from Inseat Fusion.
+Inseat Switch is not a general model benchmark, model router, scorer, prompt
+optimizer, dataset manager, or agent orchestrator. It has no LLM judge. It is
+also distinct from Inseat Fusion.
 
 ## Intended audience
 
@@ -66,8 +67,44 @@ A fixture is one JSON file describing one workflow case:
 | `tools` | Tool definitions with JSON Schema `parameters`. |
 | `expectations.requiredTool` | The tool the workflow requires. Falls back to the baseline's first tool call. |
 | `expectations.outputSchema` | JSON Schema the candidate's text output must satisfy. |
-| `checks` | Any of `tool-name`, `tool-arguments`, `structured-output`. |
+| `expectations.outcome` | Deterministic business-outcome assertion over saved evidence. See below. |
+| `checks` | Any of `tool-name`, `tool-arguments`, `structured-output`, `outcome-assertion`. |
 | `responses.baseline`, `responses.candidate` | Saved responses in `generic-v1`, `openai-chat-v1`, or `unavailable` format. |
+| `outcomeEvidence.candidate` | Saved outcome `record` (any JSON) and saved `verifiers` results. Optional. |
+
+### Outcome assertions
+
+The `outcome-assertion` check answers "did the workflow achieve its business
+outcome?" using only evidence saved in the fixture. It never runs anything and
+never consults a model.
+
+```json
+"expectations": {
+  "outcome": {
+    "source": "outcome-record",
+    "exact": { "order": { "status": "refunded" } },
+    "schema": { "type": "object", "required": ["order"] },
+    "paths": [{ "path": "order.status", "equals": "refunded" }],
+    "verifiers": [{ "kind": "test-suite", "name": "refund-e2e", "expect": "pass" }]
+  }
+}
+```
+
+- `source` is `outcome-record` (default, reads `outcomeEvidence.candidate.record`)
+  or `candidate-text` (parses the candidate's text as JSON).
+- `exact`, `schema`, and `paths` compare the record. Paths look like `a.b[0].c`.
+- `verifiers` name allowlisted verifier kinds (`command-exit-code`,
+  `test-suite`, `http-status`, `boolean-predicate`) whose results must already
+  be saved under `outcomeEvidence.candidate.verifiers`. Nothing is executed.
+- Any predicate that fails makes the check `fail`. Otherwise any predicate whose
+  evidence is missing makes it `not-tested`. Only when every predicate is
+  satisfied does it `pass`.
+
+Reason codes: `outcome-satisfied`, `exact-mismatch`, `schema-violation`,
+`path-mismatch`, `not-json`, `verifier-failed` (fail);
+`no-outcome-assertion`, `no-outcome-evidence`, `candidate-unavailable`,
+`path-not-found`, `verifier-missing`, `verifier-unavailable`,
+`verifier-not-allowlisted` (not-tested).
 
 Missing evidence produces `not-tested`, never an implicit `pass`. See
 [examples/README.md](examples/README.md) for the scenario table.

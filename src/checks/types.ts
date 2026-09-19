@@ -1,11 +1,12 @@
 export type CheckStatus = "pass" | "fail" | "not-tested";
 
-export type CheckId = "tool-name" | "tool-arguments" | "structured-output";
+export type CheckId = "tool-name" | "tool-arguments" | "structured-output" | "outcome-assertion";
 
 export const ALL_CHECK_IDS: readonly CheckId[] = [
   "tool-name",
   "tool-arguments",
   "structured-output",
+  "outcome-assertion",
 ];
 
 export interface CheckResult {

@@ -26,6 +26,7 @@ export function runFixture(fixture: Fixture): CaseResult {
     expectations: fixture.expectations,
     baseline,
     candidate,
+    ...(fixture.outcomeEvidence?.candidate ? { candidateOutcome: fixture.outcomeEvidence.candidate } : {}),
   });
 
   return {

@@ -11,7 +11,7 @@ later if the boundaries prove stable.
 | `src/config` | Zod schemas for model refs, tool definitions, expectations, and project config. | implemented |
 | `src/fixtures` | Fixture schema (v1) and loader with precise validation errors. | implemented |
 | `src/adapters` | Normalize saved responses (`generic-v1`, `openai-chat-v1`, `unavailable`). Live adapters are later and opt-in. | saved only |
-| `src/checks` | `tool-name`, `tool-arguments` (JSON Schema via Ajv 2020-12), `structured-output`. Workflow-precondition checks are not implemented. | partial |
+| `src/checks` | `tool-name`, `tool-arguments` (JSON Schema via Ajv 2020-12), `structured-output`, `outcome-assertion` (exact, schema, property-path, saved allowlisted verifier results). Workflow-precondition checks are not implemented. | partial |
 | `src/runner` | Runs enabled checks for one fixture and summarizes results. | implemented |
 | `src/report` | JSON report (`reportVersion: 1`) and text renderer. | implemented |
 | `src/cli` | `inseat-switch check <fixture>...` with `--json` and `--allow-fail`. | implemented |
@@ -55,6 +55,15 @@ without hiding provider-specific evidence.
 
 `not-tested` must never be silently converted to `pass`. Reports should retain the
 observed values and a stable reason code so users can inspect each decision.
+
+## Outcome evidence
+
+`outcome-assertion` reads `outcomeEvidence.candidate.record` (or the candidate
+text when `source: "candidate-text"`) and `outcomeEvidence.candidate.verifiers`.
+Both are fixture data the user saved after running their own workflow. The
+checker does not execute verifiers, call services, or infer outcomes from the
+model's wording. Verifier kinds are allowlisted in `ALLOWED_VERIFIER_KINDS` so an
+unknown kind is `not-tested` rather than trusted.
 
 ## Boundaries
 

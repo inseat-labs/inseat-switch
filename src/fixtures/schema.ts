@@ -4,6 +4,7 @@ import {
   ExpectationsSchema,
   ModelRefSchema,
   ToolDefinitionSchema,
+  VerifierKindSchema,
 } from "../config/schema.js";
 
 export const MessageSchema = z.object({
@@ -52,6 +53,20 @@ export const SavedResponseSchema = z.discriminatedUnion("format", [
 ]);
 export type SavedResponse = z.infer<typeof SavedResponseSchema>;
 
+export const VerifierResultSchema = z.object({
+  kind: VerifierKindSchema,
+  name: z.string().min(1),
+  status: z.enum(["pass", "fail", "unavailable"]),
+  detail: z.string().optional(),
+});
+export type VerifierResult = z.infer<typeof VerifierResultSchema>;
+
+export const OutcomeEvidenceSchema = z.object({
+  record: z.unknown().optional(),
+  verifiers: z.array(VerifierResultSchema).optional(),
+});
+export type OutcomeEvidence = z.infer<typeof OutcomeEvidenceSchema>;
+
 export const FixtureSchema = z.object({
   version: z.literal(1),
   name: z.string().min(1),
@@ -66,5 +81,10 @@ export const FixtureSchema = z.object({
     baseline: SavedResponseSchema,
     candidate: SavedResponseSchema,
   }),
+  outcomeEvidence: z
+    .object({
+      candidate: OutcomeEvidenceSchema.optional(),
+    })
+    .optional(),
 });
 export type Fixture = z.infer<typeof FixtureSchema>;

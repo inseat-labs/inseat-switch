@@ -21,6 +21,20 @@ Not implemented: workflow-precondition checks, project-level config file
 (`ProjectConfigSchema` exists but the CLI reads fixtures only), redaction, live
 adapters, multi-fixture summaries beyond totals, and npm publishing.
 
+## Added 2026-09-19: outcome assertions
+
+`outcome-assertion` check in `src/checks/outcome-assertion.ts`, property-path
+resolver and structural equality in `src/checks/property-path.ts`, schemas in
+`src/config/schema.ts` (`OutcomeAssertionSchema`, `ALLOWED_VERIFIER_KINDS`) and
+`src/fixtures/schema.ts` (`OutcomeEvidenceSchema`, `VerifierResultSchema`).
+Five new example fixtures (06 to 10), one invalid example (11), 17 new tests.
+40 tests pass. Precedence: any fail -> `fail`; else any missing evidence ->
+`not-tested`; else `pass`.
+
+Verifier results are saved fixture data only. No command execution path exists.
+Adding one is a Milestone 2 decision that needs the same explicit-enable and
+data-handling treatment as live adapters.
+
 ## Decisions taken (2026-09-18)
 
 | Open question in earlier planning | Decision |
@@ -34,6 +48,8 @@ adapters, multi-fixture summaries beyond totals, and npm publishing.
 ## Next agent instructions
 
 1. Add a `workflow-precondition` check and the missing example scenario.
+   Consider expressing it as an `outcome-assertion` over a saved pre-state
+   record before inventing a new check.
 2. Let the CLI accept a project config that lists fixtures, so users run one
    command per project instead of globbing.
 3. Add tested redaction for configured sensitive fields before any raw response

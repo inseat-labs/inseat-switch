@@ -6,6 +6,8 @@ milestones are plans.
 ## Milestone 0: Offline compatibility core
 
 Status: mostly implemented. Workflow-precondition checks remain open.
+Deterministic outcome assertions with explicit `not-tested` were added on
+2026-09-19 (`outcome-assertion`).
 
 Acceptance criteria:
 
@@ -48,6 +50,13 @@ Acceptance criteria:
 This milestone depends on user validation. Possible work includes shared reports,
 history, access controls, and managed execution. It is not a commitment to build a
 hosted product.
+
+## Explicit non-goals
+
+Generic scoring, prompt optimization, dataset management, model ranking, and
+LLM-as-judge are out of scope for every milestone. See
+`docs/ADR-001-JEV-ADVISORY-ONLY.md` for the boundary with probabilistic
+decision providers.
 
 ## Decision gates
 
