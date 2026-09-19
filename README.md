@@ -123,6 +123,7 @@ CLI. See [ARCHITECTURE.md](ARCHITECTURE.md).
 - [docs/RESEARCH.md](docs/RESEARCH.md): source-backed context and hypotheses
 - [examples/README.md](examples/README.md): synthetic fixture examples
 - [docs/HANDOFF.md](docs/HANDOFF.md): implementation state and next steps
+- [docs/ADR-001-JEV-ADVISORY-ONLY.md](docs/ADR-001-JEV-ADVISORY-ONLY.md): why no probabilistic decision provider is integrated and the conditions for an optional advisory one
 - [CONTRIBUTING.md](CONTRIBUTING.md): how to contribute
 - [SECURITY.md](SECURITY.md): private vulnerability reporting
 
