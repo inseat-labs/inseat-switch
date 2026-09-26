@@ -1,6 +1,6 @@
 {
   "name": "@inseat-labs/inseat-switch",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Offline model-migration compatibility checker: shows what breaks in an LLM workflow when the model changes.",
   "license": "Apache-2.0",
   "type": "module",
