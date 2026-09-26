@@ -2,7 +2,10 @@
 
 ## Status and premise
 
-Inseat Switch is in planning. It has no usable CLI, package, or live evaluation.
+Milestone 0 has a working offline starter: a CLI that checks saved
+baseline/candidate responses against fixtures (see `docs/HANDOFF.md`). There is
+no published package, live evaluation, or hosted service. The rest of this plan
+still describes intended direction.
 The premise is that model migrations should be checked against the application's
 own workflow contracts, not inferred from broad benchmark scores.
 
@@ -59,7 +62,7 @@ tools already solve the workflow with little friction.
 
 ## OSS and hosted boundary
 
-The planned Apache-2.0 open source core includes config and fixture contracts,
+The Apache-2.0 open source core includes config and fixture contracts,
 offline adapters, deterministic checks, the runner, and local reports. A possible
 hosted product could provide managed live runs, secure secret handling, report
 history, access controls, and collaboration. Local artifact portability must not

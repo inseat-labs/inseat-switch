@@ -3,8 +3,10 @@
 ## Current state
 
 Milestone 0 has a working offline starter. From a clean checkout, `npm ci`,
-`npm test`, `npm run build`, and `npm run check:examples` all pass (Node 24,
-verified 2026-09-18).
+`npm test`, and `npm run build` pass, and `npm run check:examples` runs the
+example fixtures (Node 24, verified 2026-09-18). `check:examples` exits `1` by
+design because some fixtures are expected to fail; use `-- --allow-fail` for a
+zero exit, as CI does.
 
 Implemented:
 
