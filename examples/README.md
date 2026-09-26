@@ -7,11 +7,12 @@ outputs, or evidence about any real provider. Run them with:
 npm run check:examples
 ```
 
-Each file's `description` states its expected overall result, and
+Each fixture's expected overall result is documented in this table, and
 `tests/examples.test.ts` asserts it.
 
 | File | Scenario | Candidate behavior | Result |
 | --- | --- | --- | --- |
+| `00-minimal.json` | Minimal tool-name fixture | Calls `get_weather`, matching the baseline tool | `pass` |
 | `01-same-tool-valid-arguments.json` | Same required tool, valid arguments | Calls `lookup_order` with schema-valid arguments | `pass` |
 | `02-wrong-tool-selected.json` | Wrong tool selected | Calls `cancel_order` instead of `lookup_order` | `fail` |
 | `03-missing-required-argument.json` | Invalid arguments (OpenAI chat shape) | Omits the required `orderId` | `fail` |
