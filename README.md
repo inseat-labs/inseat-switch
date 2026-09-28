@@ -53,10 +53,10 @@ npm run check:examples
 `examples/fixtures/` and prints `PASS`, `FAIL`, or `SKIP` (not-tested) per check.
 
 > **Expected result:** the example fixtures deliberately include regressions and
-> missing evidence, so you will see `FAIL` and `SKIP` lines. There are 11 fixture
-> cases in total: 3 pass, 4 fail, and 4 are not-tested. `npm` reports a non-zero
-> exit because some fixtures intentionally fail. That means the checker is
-> working, not that your install is broken.
+> missing evidence, so you will see `FAIL` and `SKIP` lines and the summary
+> `11 case(s): 9 pass, 4 fail, 5 not-tested` (totals count checks, not cases).
+> `npm` reports a non-zero exit because some fixtures intentionally fail. That
+> means the checker is working, not that your install is broken.
 
 The process exits `1` when any check fails, which makes it usable as a CI gate.
 
@@ -65,7 +65,6 @@ To explore the examples without a failing exit code (as CI does), pass
 
 ```bash
 npm run check:examples -- --allow-fail
-
 npm run check:examples -- --json --allow-fail  # machine-readable report
 ```
 
