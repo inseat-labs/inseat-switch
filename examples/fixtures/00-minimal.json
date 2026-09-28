@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "name": "minimal-tool-name",
+  "baseline": {
+    "provider": "example",
+    "model": "baseline-model"
+  },
+  "candidate": {
+    "provider": "example",
+    "model": "candidate-model"
+  },
+  "messages": [
+    {
+      "role": "user",
+      "content": "Find the weather."
+    }
+  ],
+  "checks": ["tool-name"],
+  "responses": {
+    "baseline": {
+      "format": "generic-v1",
+      "toolCalls": [
+        {
+          "name": "get_weather",
+          "arguments": {}
+        }
+      ]
+    },
+    "candidate": {
+      "format": "generic-v1",
+      "toolCalls": [
+        {
+          "name": "get_weather",
+          "arguments": {}
+        }
+      ]
+    }
+  }
+}

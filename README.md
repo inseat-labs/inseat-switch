@@ -53,17 +53,19 @@ npm run check:examples
 `examples/fixtures/` and prints `PASS`, `FAIL`, or `SKIP` (not-tested) per check.
 
 > **Expected result:** the example fixtures deliberately include regressions and
-> missing evidence, so you will see `FAIL` and `SKIP` lines, a summary of
-> `10 case(s): 8 pass, 4 fail, 5 not-tested`, and `npm` reporting a non-zero
-> exit. That means the checker is working, not that your install is broken.
+> missing evidence, so you will see `FAIL` and `SKIP` lines and the summary
+> `11 case(s): 9 pass, 4 fail, 5 not-tested` (totals count checks, not cases).
+> `npm` reports a non-zero exit because some fixtures intentionally fail. That
+> means the checker is working, not that your install is broken.
 
 The process exits `1` when any check fails, which makes it usable as a CI gate.
+
 To explore the examples without a failing exit code (as CI does), pass
 `--allow-fail`; fixture load errors still exit `2`:
 
 ```bash
 npm run check:examples -- --allow-fail
-npm run check:examples -- --json --allow-fail   # machine-readable report
+npm run check:examples -- --json --allow-fail  # machine-readable report
 ```
 
 Everything runs offline. No provider credentials, network calls, or paid API usage
@@ -74,17 +76,70 @@ are involved. See [ROADMAP.md](ROADMAP.md) for acceptance criteria and
 
 A fixture is one JSON file describing one workflow case:
 
-| Field | Purpose |
-| --- | --- |
-| `baseline`, `candidate` | Provider and model identifiers for labeling. |
-| `messages` | The conversation the models were given. |
-| `tools` | Tool definitions with JSON Schema `parameters`. |
-| `expectations.requiredTool` | The tool the workflow requires. Falls back to the baseline's first tool call. |
-| `expectations.outputSchema` | JSON Schema the candidate's text output must satisfy. |
-| `expectations.outcome` | Deterministic business-outcome assertion over saved evidence. See below. |
-| `checks` | Any of `tool-name`, `tool-arguments`, `structured-output`, `outcome-assertion`. |
-| `responses.baseline`, `responses.candidate` | Saved responses in `generic-v1`, `openai-chat-v1`, or `unavailable` format. |
-| `outcomeEvidence.candidate` | Saved outcome `record` (any JSON) and saved `verifiers` results. Optional. |
+| Field                                       | Purpose                                                                         |
+| ------------------------------------------- | ------------------------------------------------------------------------------- |
+| `baseline`, `candidate`                     | Provider and model identifiers for labeling.                                    |
+| `messages`                                  | The conversation the models were given.                                         |
+| `tools`                                     | Tool definitions with JSON Schema `parameters`.                                 |
+| `expectations.requiredTool`                 | The tool the workflow requires. Falls back to the baseline's first tool call.   |
+| `expectations.outputSchema`                 | JSON Schema the candidate's text output must satisfy.                           |
+| `expectations.outcome`                      | Deterministic business-outcome assertion over saved evidence. See below.        |
+| `checks`                                    | Any of `tool-name`, `tool-arguments`, `structured-output`, `outcome-assertion`. |
+| `responses.baseline`, `responses.candidate` | Saved responses in `generic-v1`, `openai-chat-v1`, or `unavailable` format.     |
+| `outcomeEvidence.candidate`                 | Saved outcome `record` (any JSON) and saved `verifiers` results. Optional.      |
+
+### Minimal fixture
+
+The smallest valid fixture includes the required fields `version`, `name`,
+`baseline`, `candidate`, `messages`, `checks`, and `responses`. The `description`
+and `outcomeEvidence` fields are optional. The `tools` and `expectations` fields
+are also omitted below because they have defaults (`[]` and `{}` respectively).
+
+```json
+{
+  "version": 1,
+  "name": "minimal-tool-name",
+  "baseline": {
+    "provider": "example",
+    "model": "baseline-model"
+  },
+  "candidate": {
+    "provider": "example",
+    "model": "candidate-model"
+  },
+  "messages": [
+    {
+      "role": "user",
+      "content": "Find the weather."
+    }
+  ],
+  "checks": ["tool-name"],
+  "responses": {
+    "baseline": {
+      "format": "generic-v1",
+      "toolCalls": [
+        {
+          "name": "get_weather",
+          "arguments": {}
+        }
+      ]
+    },
+    "candidate": {
+      "format": "generic-v1",
+      "toolCalls": [
+        {
+          "name": "get_weather",
+          "arguments": {}
+        }
+      ]
+    }
+  }
+}
+```
+
+This example is synthetic and contains no credentials, customer data, or provider
+output. With no `expectations.requiredTool` configured, the `tool-name` check uses
+the baseline's first tool call (`get_weather`) as the expected tool name.
 
 ### Outcome assertions
 
@@ -104,13 +159,13 @@ never consults a model.
 }
 ```
 
-- `source` is `outcome-record` (default, reads `outcomeEvidence.candidate.record`)
+* `source` is `outcome-record` (default, reads `outcomeEvidence.candidate.record`)
   or `candidate-text` (parses the candidate's text as JSON).
-- `exact`, `schema`, and `paths` compare the record. Paths look like `a.b[0].c`.
-- `verifiers` name allowlisted verifier kinds (`command-exit-code`,
+* `exact`, `schema`, and `paths` compare the record. Paths look like `a.b[0].c`.
+* `verifiers` name allowlisted verifier kinds (`command-exit-code`,
   `test-suite`, `http-status`, `boolean-predicate`) whose results must already
   be saved under `outcomeEvidence.candidate.verifiers`. Nothing is executed.
-- Any predicate that fails makes the check `fail`. Otherwise any predicate whose
+* Any predicate that fails makes the check `fail`. Otherwise any predicate whose
   evidence is missing makes it `not-tested`. Only when every predicate is
   satisfied does it `pass`.
 
@@ -131,16 +186,16 @@ CLI. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Project documents
 
-- [ARCHITECTURE.md](ARCHITECTURE.md): components, implementation status, and data flow
-- [ROADMAP.md](ROADMAP.md): milestones and acceptance criteria
-- [docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md): users, jobs, risks, and boundaries
-- [docs/RESEARCH.md](docs/RESEARCH.md): source-backed context and hypotheses
-- [examples/README.md](examples/README.md): synthetic fixture examples
-- [docs/HANDOFF.md](docs/HANDOFF.md): implementation state and next steps
-- [docs/ADR-001-JEV-ADVISORY-ONLY.md](docs/ADR-001-JEV-ADVISORY-ONLY.md): why no probabilistic decision provider is integrated and the conditions for an optional advisory one
-- [CONTRIBUTING.md](CONTRIBUTING.md): how to contribute
-- [SECURITY.md](SECURITY.md): private vulnerability reporting
-- [CHANGELOG.md](CHANGELOG.md): release notes
+* [ARCHITECTURE.md](ARCHITECTURE.md): components, implementation status, and data flow
+* [ROADMAP.md](ROADMAP.md): milestones and acceptance criteria
+* [docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md): users, jobs, risks, and boundaries
+* [docs/RESEARCH.md](docs/RESEARCH.md): source-backed context and hypotheses
+* [examples/README.md](examples/README.md): synthetic fixture examples
+* [docs/HANDOFF.md](docs/HANDOFF.md): implementation state and next steps
+* [docs/ADR-001-JEV-ADVISORY-ONLY.md](docs/ADR-001-JEV-ADVISORY-ONLY.md): why no probabilistic decision provider is integrated and the conditions for an optional advisory one
+* [CONTRIBUTING.md](CONTRIBUTING.md): how to contribute
+* [SECURITY.md](SECURITY.md): private vulnerability reporting
+* [CHANGELOG.md](CHANGELOG.md): release notes
 
 ## License and independence
 

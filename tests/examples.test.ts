@@ -9,6 +9,7 @@ import { renderTextReport } from "../src/report/text.js";
 const dir = join(import.meta.dirname, "..", "examples", "fixtures");
 
 const expected: Record<string, "pass" | "fail" | "not-tested"> = {
+  "minimal-tool-name": "pass",
   "same-tool-valid-arguments": "pass",
   "wrong-tool-selected": "fail",
   "missing-required-argument": "fail",
