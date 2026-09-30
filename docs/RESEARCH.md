@@ -22,7 +22,7 @@ They do not imply affiliation with or endorsement by any vendor.
 
 Promptfoo, Not Diamond, Langfuse, and Braintrust overlap with parts of the proposed
 evaluation workflow. Their documented scopes include combinations of assertions,
-evaluation, datasets, experiments, observability, or model selection. Inseat Switch
+evaluation, datasets, experiments, observability, or model selection. Switch
 does not claim those products cannot perform migration checks.
 
 The proposed differentiation is narrower product framing: an offline-first,

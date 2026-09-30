@@ -18,7 +18,7 @@ export function buildJsonReport(cases: CaseResult[], version: string, now = new 
   return {
     reportVersion: 1,
     generatedAt: now.toISOString(),
-    tool: { name: "inseat-switch", version },
+    tool: { name: "switch", version },
     cases,
     totals,
   };

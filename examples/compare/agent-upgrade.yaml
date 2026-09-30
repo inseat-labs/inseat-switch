@@ -1,0 +1,56 @@
+# Example: would switching an everyday ops agent from Sonnet to Haiku change what it does?
+# Run from the repository root:
+#   npx github:inseat-labs/switch compare examples/compare/agent-upgrade.yaml
+baseline: claude-cli:sonnet
+candidate: claude-cli:haiku
+repeat: 2
+
+system: |
+  You are an operations assistant for the Acme engineering team. All times are UTC.
+  Use a tool when you have everything it needs. If a required detail is missing
+  or ambiguous, ask the user instead of guessing.
+
+tools:
+  - name: search_docs
+    description: Search the internal engineering documentation.
+    parameters:
+      type: object
+      properties:
+        query: { type: string, minLength: 1 }
+        limit: { type: integer, minimum: 1, maximum: 10, description: Max results, default 5 }
+      required: [query]
+  - name: create_calendar_event
+    description: Create a calendar event and invite attendees.
+    parameters:
+      type: object
+      properties:
+        title: { type: string, minLength: 1 }
+        start: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}", description: ISO 8601 start time }
+        durationMinutes: { type: integer, minimum: 5 }
+        attendees: { type: array, items: { type: string, pattern: "^[^@\\s]+@[^@\\s]+$" }, minItems: 1 }
+      required: [title, start, durationMinutes, attendees]
+  - name: send_email
+    description: Send an email from the assistant's account.
+    parameters:
+      type: object
+      properties:
+        to: { type: string, pattern: "^[^@\\s]+@[^@\\s]+$" }
+        subject: { type: string, minLength: 1 }
+        body: { type: string, minLength: 1 }
+      required: [to, subject, body]
+
+cases:
+  - name: search docs
+    prompt: How do I rotate a production API key? Check the docs.
+  - name: search with limit
+    prompt: Find the docs on the rate limit for the /v1/orders endpoint. Just the top 3 results.
+  - name: schedule with details
+    prompt: >-
+      Set up a 30-minute "Checkout redesign review" with maya@acme.io and li@acme.io
+      on Tuesday 2026-10-06 at 14:00.
+  - name: schedule missing date
+    prompt: Book a 1-hour Q4 planning sync with jordan@acme.io.
+  - name: email with recipient
+    prompt: Email priya@acme.io that the staging deploy finished and ask her to run the smoke tests.
+  - name: email missing recipient
+    prompt: Send a quick note that the 2.4 release slips to Friday.

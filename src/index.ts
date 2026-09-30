@@ -7,3 +7,16 @@ export * from "./checks/index.js";
 export { runFixture, summarize, type CaseResult, type CaseSummary } from "./runner/run.js";
 export { buildJsonReport, type JsonReport } from "./report/json.js";
 export { renderTextReport } from "./report/text.js";
+
+export type * from "./compare/types.js";
+export { loadCompareConfig, resolveCompareConfig, ConfigError, CompareConfigSchema } from "./compare/config.js";
+export { parseImportJsonl, ImportError } from "./compare/import.js";
+export { toBehavior, type Behavior } from "./compare/behavior.js";
+export { diffBehaviors, type CaseDiff, type CaseStatus, type Finding, type FlakyNote, type Category, type Severity } from "./compare/diff.js";
+export { DiskCache, cacheKey, type ResponseCache } from "./compare/cache.js";
+export { runCompare, type CompareResult, type Sample, type RunOptions } from "./compare/run.js";
+export type { CaseResult as CompareCaseResult } from "./compare/run.js";
+export * from "./providers/index.js";
+export { renderCompareText } from "./report/compare-text.js";
+export { renderCompareHtml, escapeHtml } from "./report/compare-html.js";
+export { buildCompareJson, type CompareJsonReport } from "./report/compare-json.js";

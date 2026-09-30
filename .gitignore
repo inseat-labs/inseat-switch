@@ -11,6 +11,8 @@ coverage/
 # Tool output
 .cache/
 .inseat-switch/
+.switch-cache/
+/switch-report.html
 artifacts/
 reports/
 *.log

@@ -2,7 +2,7 @@
 
 ## Current scope
 
-Inseat Switch is an early-stage offline CLI (Milestone 0). It reads local
+Switch is an early-stage offline CLI (Milestone 0). It reads local
 fixture files containing saved baseline/candidate responses and saved outcome
 evidence, runs deterministic checks, and prints a report. It makes no network
 requests, calls no model provider, executes no verifier commands, and needs no

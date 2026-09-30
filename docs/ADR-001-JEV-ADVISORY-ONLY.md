@@ -8,7 +8,7 @@ flag, or network call related to Jev exists in this repository.
 ## Context
 
 The AGNTCon research (September 2026) raised whether a hosted probabilistic
-decision model could help Inseat Switch make judgment calls. Jev, from TypeSafe,
+decision model could help Switch make judgment calls. Jev, from TypeSafe,
 is the candidate under discussion. This record fixes what Jev is, what it is
 not, and the conditions under which it could ever be wired in.
 

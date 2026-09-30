@@ -1,0 +1,857 @@
+{
+  "reportVersion": 1,
+  "kind": "compare",
+  "switchVersion": "0.1.0",
+  "generatedAt": "2026-09-30T15:37:47.827Z",
+  "baseline": "claude-cli:sonnet",
+  "candidate": "claude-cli:haiku",
+  "repeat": 2,
+  "totals": {
+    "regression": 0,
+    "change": 0,
+    "info": 0,
+    "flaky": 1,
+    "same": 5,
+    "error": 0
+  },
+  "calls": {
+    "live": 24,
+    "cached": 0,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "name": "search docs",
+      "status": "flaky",
+      "findings": [],
+      "flaky": [
+        {
+          "feature": "arg search_docs.limit",
+          "evidence": "2/2 -> 1/2"
+        }
+      ],
+      "system": "You are an operations assistant for the Acme engineering team. All times are UTC.\nUse a tool when you have everything it needs. If a required detail is missing\nor ambiguous, ask the user instead of guessing.\n",
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I rotate a production API key? Check the docs."
+        }
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rotate production API key",
+                  "limit": 5
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rotate production API key",
+                    "limit": 5
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rotate production API key",
+                  "limit": 5
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rotate production API key",
+                    "limit": 5
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ],
+        "candidate": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rotate production API key"
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rotate production API key"
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rotate production API key",
+                  "limit": 5
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rotate production API key",
+                    "limit": 5
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "search with limit",
+      "status": "same",
+      "findings": [],
+      "flaky": [],
+      "system": "You are an operations assistant for the Acme engineering team. All times are UTC.\nUse a tool when you have everything it needs. If a required detail is missing\nor ambiguous, ask the user instead of guessing.\n",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Find the docs on the rate limit for the /v1/orders endpoint. Just the top 3 results."
+        }
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rate limit /v1/orders endpoint",
+                  "limit": 3
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rate limit /v1/orders endpoint",
+                    "limit": 3
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rate limit /v1/orders endpoint",
+                  "limit": 3
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rate limit /v1/orders endpoint",
+                    "limit": 3
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ],
+        "candidate": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rate limit /v1/orders endpoint",
+                  "limit": 3
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rate limit /v1/orders endpoint",
+                    "limit": 3
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "search_docs",
+                "arguments": {
+                  "query": "rate limit /v1/orders endpoint",
+                  "limit": 3
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "search_docs",
+                  "arguments": {
+                    "query": "rate limit /v1/orders endpoint",
+                    "limit": 3
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "schedule with details",
+      "status": "same",
+      "findings": [],
+      "flaky": [],
+      "system": "You are an operations assistant for the Acme engineering team. All times are UTC.\nUse a tool when you have everything it needs. If a required detail is missing\nor ambiguous, ask the user instead of guessing.\n",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Set up a 30-minute \"Checkout redesign review\" with maya@acme.io and li@acme.io on Tuesday 2026-10-06 at 14:00."
+        }
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "create_calendar_event",
+                "arguments": {
+                  "title": "Checkout redesign review",
+                  "start": "2026-10-06T14:00",
+                  "durationMinutes": 30,
+                  "attendees": [
+                    "maya@acme.io",
+                    "li@acme.io"
+                  ]
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "create_calendar_event",
+                  "arguments": {
+                    "title": "Checkout redesign review",
+                    "start": "2026-10-06T14:00",
+                    "durationMinutes": 30,
+                    "attendees": [
+                      "maya@acme.io",
+                      "li@acme.io"
+                    ]
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "create_calendar_event",
+                "arguments": {
+                  "title": "Checkout redesign review",
+                  "start": "2026-10-06T14:00",
+                  "durationMinutes": 30,
+                  "attendees": [
+                    "maya@acme.io",
+                    "li@acme.io"
+                  ]
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "create_calendar_event",
+                  "arguments": {
+                    "title": "Checkout redesign review",
+                    "start": "2026-10-06T14:00",
+                    "durationMinutes": 30,
+                    "attendees": [
+                      "maya@acme.io",
+                      "li@acme.io"
+                    ]
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ],
+        "candidate": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "create_calendar_event",
+                "arguments": {
+                  "title": "Checkout redesign review",
+                  "start": "2026-10-06T14:00",
+                  "durationMinutes": 30,
+                  "attendees": [
+                    "maya@acme.io",
+                    "li@acme.io"
+                  ]
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "create_calendar_event",
+                  "arguments": {
+                    "title": "Checkout redesign review",
+                    "start": "2026-10-06T14:00",
+                    "durationMinutes": 30,
+                    "attendees": [
+                      "maya@acme.io",
+                      "li@acme.io"
+                    ]
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "create_calendar_event",
+                "arguments": {
+                  "title": "Checkout redesign review",
+                  "start": "2026-10-06T14:00",
+                  "durationMinutes": 30,
+                  "attendees": [
+                    "maya@acme.io",
+                    "li@acme.io"
+                  ]
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "create_calendar_event",
+                  "arguments": {
+                    "title": "Checkout redesign review",
+                    "start": "2026-10-06T14:00",
+                    "durationMinutes": 30,
+                    "attendees": [
+                      "maya@acme.io",
+                      "li@acme.io"
+                    ]
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "schedule missing date",
+      "status": "same",
+      "findings": [],
+      "flaky": [],
+      "system": "You are an operations assistant for the Acme engineering team. All times are UTC.\nUse a tool when you have everything it needs. If a required detail is missing\nor ambiguous, ask the user instead of guessing.\n",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Book a 1-hour Q4 planning sync with jordan@acme.io."
+        }
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "What date and start time (UTC) should the Q4 planning sync be on? I have the rest: 1 hour, with jordan@acme.io. Let me know if you'd like anyone else invited or a different title than \"Q4 Planning Sync\".",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "What date and start time (UTC) should the Q4 planning sync be on? I have the rest: 1 hour, with jordan@acme.io. Let me know if you'd like anyone else invited or a different title than \"Q4 Planning Sync\".",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "What date and start time (UTC) should the Q4 planning sync be? Once I have that, I'll book it for 1 hour with jordan@acme.io. Do you also want anyone else invited, or should it be just the two of you?",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "What date and start time (UTC) should the Q4 planning sync be? Once I have that, I'll book it for 1 hour with jordan@acme.io. Do you also want anyone else invited, or should it be just the two of you?",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ],
+        "candidate": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "I can help you book that Q4 planning sync with jordan@acme.io. However, I need one more detail:\n\n**What time would you like to schedule the meeting?** Please provide a specific time (for example: 2026-10-01 at 14:00, or tomorrow at 10:00 AM), and I'll create the calendar event for 1 hour.",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "I can help you book that Q4 planning sync with jordan@acme.io. However, I need one more detail:\n\n**What time would you like to schedule the meeting?** Please provide a specific time (for example: 2026-10-01 at 14:00, or tomorrow at 10:00 AM), and I'll create the calendar event for 1 hour.",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            },
+            "formatNote": "plain-text reply, no JSON"
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "I'd be happy to help you book that Q4 planning sync with jordan@acme.io. To create the calendar event, I need to know:\n\n**When would you like to schedule this meeting?** Please provide a date and time (for example: 2026-10-01 at 14:00 UTC, or \"tomorrow at 10:00 UTC\").",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "I'd be happy to help you book that Q4 planning sync with jordan@acme.io. To create the calendar event, I need to know:\n\n**When would you like to schedule this meeting?** Please provide a date and time (for example: 2026-10-01 at 14:00 UTC, or \"tomorrow at 10:00 UTC\").",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            },
+            "formatNote": "plain-text reply, no JSON"
+          }
+        ]
+      }
+    },
+    {
+      "name": "email with recipient",
+      "status": "same",
+      "findings": [],
+      "flaky": [],
+      "system": "You are an operations assistant for the Acme engineering team. All times are UTC.\nUse a tool when you have everything it needs. If a required detail is missing\nor ambiguous, ask the user instead of guessing.\n",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Email priya@acme.io that the staging deploy finished and ask her to run the smoke tests."
+        }
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "send_email",
+                "arguments": {
+                  "to": "priya@acme.io",
+                  "subject": "Staging deploy finished - please run smoke tests",
+                  "body": "Hi Priya,\n\nThe staging deploy has finished. Could you please run the smoke tests when you get a chance and let me know the results?\n\nThanks!"
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "send_email",
+                  "arguments": {
+                    "to": "priya@acme.io",
+                    "subject": "Staging deploy finished - please run smoke tests",
+                    "body": "Hi Priya,\n\nThe staging deploy has finished. Could you please run the smoke tests when you get a chance and let me know the results?\n\nThanks!"
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "send_email",
+                "arguments": {
+                  "to": "priya@acme.io",
+                  "subject": "Staging deploy finished - please run smoke tests",
+                  "body": "Hi Priya,\n\nThe staging deploy has finished. Could you please run the smoke tests when you get a chance and let me know the results?\n\nThanks!"
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "send_email",
+                  "arguments": {
+                    "to": "priya@acme.io",
+                    "subject": "Staging deploy finished - please run smoke tests",
+                    "body": "Hi Priya,\n\nThe staging deploy has finished. Could you please run the smoke tests when you get a chance and let me know the results?\n\nThanks!"
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ],
+        "candidate": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "send_email",
+                "arguments": {
+                  "to": "priya@acme.io",
+                  "subject": "Staging Deploy Complete - Smoke Tests Ready",
+                  "body": "Hi Priya,\n\nThe staging deploy has finished successfully. Please proceed with running the smoke tests when you have a chance.\n\nThanks!"
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "send_email",
+                  "arguments": {
+                    "to": "priya@acme.io",
+                    "subject": "Staging Deploy Complete - Smoke Tests Ready",
+                    "body": "Hi Priya,\n\nThe staging deploy has finished successfully. Please proceed with running the smoke tests when you have a chance.\n\nThanks!"
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": null,
+            "toolCalls": [
+              {
+                "name": "send_email",
+                "arguments": {
+                  "to": "priya@acme.io",
+                  "subject": "Staging Deploy Complete - Please Run Smoke Tests",
+                  "body": "Hi Priya,\n\nThe staging deploy has finished successfully. Could you please run the smoke tests to verify everything is working as expected?\n\nThanks!\n\nBest regards,\nAcme Operations"
+                }
+              }
+            ],
+            "behavior": {
+              "toolCalls": [
+                {
+                  "name": "send_email",
+                  "arguments": {
+                    "to": "priya@acme.io",
+                    "subject": "Staging Deploy Complete - Please Run Smoke Tests",
+                    "body": "Hi Priya,\n\nThe staging deploy has finished successfully. Could you please run the smoke tests to verify everything is working as expected?\n\nThanks!\n\nBest regards,\nAcme Operations"
+                  }
+                }
+              ],
+              "text": null,
+              "asksClarification": false,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "email missing recipient",
+      "status": "same",
+      "findings": [],
+      "flaky": [],
+      "system": "You are an operations assistant for the Acme engineering team. All times are UTC.\nUse a tool when you have everything it needs. If a required detail is missing\nor ambiguous, ask the user instead of guessing.\n",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Send a quick note that the 2.4 release slips to Friday."
+        }
+      ],
+      "samples": {
+        "baseline": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "Happy to send that. Who should I email it to? I need the recipient's email address. Also, do you want any extra details in the note (for example, the reason for the slip or the exact Friday date, which would be 2026-10-02), or should I keep it to a short line saying the 2.4 release slips to Friday?",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "Happy to send that. Who should I email it to? I need the recipient's email address. Also, do you want any extra details in the note (for example, the reason for the slip or the exact Friday date, which would be 2026-10-02), or should I keep it to a short line saying the 2.4 release slips to Friday?",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "Happy to send that note. Who should I send it to? I need the recipient's email address. If you'd like a particular subject line or any extra detail (like the reason for the slip), let me know. Otherwise I'll use the subject \"2.4 release slipping to Friday\" and keep the body short.",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "Happy to send that note. Who should I send it to? I need the recipient's email address. If you'd like a particular subject line or any extra detail (like the reason for the slip), let me know. Otherwise I'll use the subject \"2.4 release slipping to Friday\" and keep the body short.",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            }
+          }
+        ],
+        "candidate": [
+          {
+            "index": 0,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "I'd be happy to help send that notification. I need a couple of clarifications:\n\n1. **Who should I send this to?** (email address or team name)\n2. **Which Friday?** (e.g., this coming Friday October 2nd, or a different date?)\n\nOnce you provide those details, I'll send the note right away.",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "I'd be happy to help send that notification. I need a couple of clarifications:\n\n1. **Who should I send this to?** (email address or team name)\n2. **Which Friday?** (e.g., this coming Friday October 2nd, or a different date?)\n\nOnce you provide those details, I'll send the note right away.",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            },
+            "formatNote": "plain-text reply, no JSON"
+          },
+          {
+            "index": 1,
+            "source": "live",
+            "status": "ok",
+            "toolMode": "prompted",
+            "text": "I can help you send that note, but I need to know:\n\n1. **Who should I send it to?** (email address or list of recipients)\n2. **Any additional details?** For example, should I include a reason for the slip, or any other context?\n\nOnce you provide the recipient(s), I'll send out a quick message about the 2.4 release moving to Friday (2026-10-02).",
+            "toolCalls": [],
+            "behavior": {
+              "toolCalls": [],
+              "text": "I can help you send that note, but I need to know:\n\n1. **Who should I send it to?** (email address or list of recipients)\n2. **Any additional details?** For example, should I include a reason for the slip, or any other context?\n\nOnce you provide the recipient(s), I'll send out a quick message about the 2.4 release moving to Friday (2026-10-02).",
+              "asksClarification": true,
+              "refused": false,
+              "argsValid": true,
+              "argErrors": [],
+              "unparseable": false
+            },
+            "formatNote": "plain-text reply, no JSON"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,49 +1,193 @@
-# Inseat Switch
+# Switch
 
-Inseat Switch is an early-stage model-migration compatibility checker for developers
-who need to compare a baseline model with a candidate model on their own workflow.
+**Snapshot tests for AI model upgrades.** Switch runs your real prompts on your
+current model and on the model you want to switch to, several times each, and
+reports only the tool-calling behaviors that change consistently.
 
-> Status: early development (Milestone 0 starter). An offline CLI exists that
-> compares saved baseline/candidate responses against synthetic fixtures. There
-> are no live model adapters, no hosted service, and no published npm package yet.
+Your current model's behavior is the baseline. You do not write expected answers
+or assertions.
 
-The goal is to make model changes reviewable before rollout. The current CLI
-replays representative workflow fixtures against saved responses; explicitly
-enabled live model adapters are a later milestone. Reports show `pass`, `fail`,
-or `not-tested` for these checks:
+> Status: early (0.x). Not published to npm; run it from GitHub with `npx`.
+> Formats and categories may still change.
 
-- tool selection and tool name
-- tool arguments and JSON Schema compatibility
-- structured output against a JSON Schema
-- deterministic business-outcome assertions over saved evidence
-- workflow preconditions (planned, not implemented yet)
+## 30-second quickstart
 
-Inseat Switch is not a general model benchmark, model router, scorer, prompt
-optimizer, dataset manager, or agent orchestrator. It has no LLM judge. It is
-also distinct from Inseat Fusion.
+Requires Node.js 22+. The default config uses the `claude` CLI (Claude Code) with
+your existing login, so no API key is needed to try it.
+
+```bash
+npx github:inseat-labs/switch init      # writes a commented switch.yaml
+npx github:inseat-labs/switch compare   # baseline vs candidate, writes switch-report.html
+```
+
+When installed, the same commands are `switch init` and `switch compare`.
+
+Real output from [examples/compare/agent-upgrade.yaml](examples/compare/agent-upgrade.yaml)
+(6 everyday agent cases, 3 tools, `claude-cli:sonnet` vs `claude-cli:haiku`,
+`repeat: 2`). Full reports: [report.html](examples/compare/report.html),
+[report.json](examples/compare/report.json).
+
+```text
+Switch  claude-cli:sonnet -> claude-cli:haiku   6 cases x 2 samples
+(claude-cli: tools are described in the prompt and returned as JSON, not native tool calls)
+? FLAKY       search docs              arg search_docs.limit (2/2 -> 1/2)
+✓ SAME        search with limit
+✓ SAME        schedule with details
+✓ SAME        schedule missing date
+✓ SAME        email with recipient
+✓ SAME        email missing recipient
+calls: 24 live, 0 cached, 0 failed
+Result: 0 regression, 0 change, 5 same, 1 flaky   report: examples/compare/report.html
+```
+
+On these six cases Haiku behaved like Sonnet: same tools, same identifier-like
+arguments, and it asked for the missing date and recipient too. The only
+difference was that Haiku once omitted the optional `limit` argument. With 2
+samples that is flaky, not a consistent change. An earlier run of this example,
+made before a small change to the `claude-cli` prompt, showed Haiku omitting
+`limit` in 2 of 2 samples. That is why the default is `repeat: 3`, and why you
+should use 3 or more samples before deciding.
+
+## What it reports
+
+For each case, each sample is normalized to tool calls (name and arguments),
+text, whether it asked a clarifying question, whether it refused, and whether
+its arguments validate against the tool's JSON Schema (Ajv). A difference is a
+finding only when it appears in **more than half** of one model's samples and
+**fewer than half** of the other's. Any other difference is **flaky**. Flaky
+differences are listed but never fail the run.
+
+| Category | Severity | Meaning |
+| --- | --- | --- |
+| `tool-dropped` | regression | baseline calls the tool, candidate does not |
+| `tool-switched` | regression | candidate calls a different tool instead |
+| `args-invalid` | regression | candidate arguments break the tool schema |
+| `acted-instead-of-asking` | regression | baseline asked for missing details, candidate called a tool |
+| `refused` | regression | candidate refuses where the baseline did not |
+| `output-unparseable` | regression | candidate replies could not be parsed (prompted mode) |
+| `tool-added` | change | candidate calls an extra tool |
+| `arg-added` / `arg-removed` | change | e.g. an invented optional argument |
+| `arg-value-changed` | change | a stable identifier-like value (id, email, date, number, enum) changed |
+| `asked-instead-of-acting` | change | candidate asks where the baseline acted |
+| `text-only-change` | info | reply text appears, disappears, or changes length a lot |
+
+Exit codes: `0` no regression, `1` at least one regression or a case with no
+usable samples, `2` invalid config, missing credentials or CLI, or bad flags.
+
+## Config
+
+```yaml
+baseline: claude-cli:sonnet        # provider:model
+candidate: claude-cli:haiku
+repeat: 3                          # samples per model per case
+system: "You are a support agent..."   # optional
+tools:                             # optional, OpenAI function style
+  - name: lookup_order
+    description: Look up an order by id.
+    parameters: { type: object, properties: { orderId: { type: string } }, required: [orderId] }
+cases:
+  - name: lookup order
+    prompt: "Where is order ORD-123456?"     # or messages: [...] (OpenAI chat format)
+  - import: logs/openai-chat.jsonl           # optional: recorded traffic
+```
+
+JSON configs work too (`compare switch.json`). Options: `--repeat <n>`,
+`--json <file>` (`-` for stdout), `--html <file>` (default `switch-report.html`),
+`--no-html`, `--no-cache`, `--concurrency <n>`.
+
+### Providers
+
+| Id | Needs | Tool calling |
+| --- | --- | --- |
+| `claude-cli:<model>` | `claude` on PATH, logged in | **prompted**: tools are described in the system prompt and the model must reply with `{"tool_calls": [...], "text": ...}` |
+| `anthropic:<model>` | `ANTHROPIC_API_KEY` (optional `ANTHROPIC_BASE_URL`) | native (Messages API) |
+| `openai:<model>` | `OPENAI_API_KEY`, and/or `OPENAI_BASE_URL` for OpenRouter, Ollama, vLLM, or any compatible server | native (Chat Completions) |
+
+`claude-cli` runs `claude -p --output-format json` without a shell, with built-in
+tools disabled (`--tools ""`), no MCP servers or settings files, no session
+persistence, and a fresh temporary working directory. Keys are read from the
+environment and never logged.
+
+### Cache
+
+Responses are cached in `.switch-cache/`, keyed by provider, model, system
+prompt, messages, tools, and sample index, so reruns cost nothing. Delete the
+directory or pass `--no-cache` to resample.
+
+### Importing recorded traffic
+
+An `import:` case reads OpenAI chat-completions JSONL. Each line is
+`{"request": {"model", "messages", "tools"}, "response": {"choices": [{"message"}]}}`
+or the bare `{"messages", "tools", "response"}` form. Each line becomes a case,
+and its recorded response is added as one extra **baseline** sample.
+
+## How it compares
+
+These tools are mature and broader than Switch. Switch does one narrow thing.
+
+| | Strength | How you define "correct" | Separates noise from change | Tool-call behavior diff |
+| --- | --- | --- | --- | --- |
+| [promptfoo](https://github.com/promptfoo/promptfoo) | YAML evals across many providers, assertions, LLM-graded rubrics, red teaming, caching, web viewer | assertions you write per test | `--repeat` runs tests again; pass or fail is still per assertion | through assertions you write |
+| [DeepEval](https://github.com/confident-ai/deepeval) | pytest-style LLM tests, many LLM-as-judge metrics, tool-correctness metric | expected outputs/tools and metric thresholds you provide | not its focus | compares against expected tools you list |
+| [OpenAI Evals](https://github.com/openai/evals) | eval framework and registry, model-graded evals | datasets with ideal answers or graders | not its focus | not its focus |
+| **Switch** | model-upgrade diff of tool behavior | none: the current model's behavior is the snapshot | repeat sampling, majority rule, explicit `flaky` | categories such as `tool-dropped`, `arg-added`, `acted-instead-of-asking` |
+
+What Switch adds: baseline snapshots with no assertions, repeated sampling that
+keeps model nondeterminism out of the failure list, tool-behavior diff
+categories, and a keyless trial through your Claude Code login. What it does not
+do: judge answer quality or correctness, red-team, score text semantically, or
+run multi-step agent loops. If you already have assertions, use them with a
+general eval tool as well.
+
+## Limitations
+
+- **Prompted tool mode.** `claude-cli` cannot take custom tool definitions. Its
+  JSON protocol approximates native tool calling but is not identical to it. A reply
+  with no JSON is treated as a plain-text reply with no tool call and tagged in
+  the report. Malformed JSON is kept as an `unparseable` sample. Use
+  `anthropic:` or `openai:` for native tool calling.
+- **Claude Code adds its own context.** `claude -p` appends an environment
+  section after the system prompt (working directory, platform, model name, date, and
+  the logged-in account email). Switch tells the model to ignore it. Before
+  that instruction was added, replies in two runs of the example mentioned the
+  account email. Review reports before sharing them.
+- **Heuristics.** "Asked a clarifying question" and "refused" are English
+  regex heuristics on replies without tool calls.
+- **Free text is not diffed.** Argument values containing spaces (queries,
+  email bodies, titles) are not compared, because rewording is expected. Only
+  identifier-like values are compared.
+- **Small samples.** With `repeat: 2`, only a 2/2 vs 0/2 split counts as
+  consistent. Use 3 or more for decisions.
+- **Imported samples.** Recorded responses may come from a different model,
+  temperature, or system prompt than the configured baseline. They are added as
+  baseline samples as-is.
+- **One turn.** Switch compares the model's next reply to a fixed conversation.
+  It does not execute tools or follow multi-step agent loops.
 
 ## Intended audience
 
-The project is intended for application and platform developers who own an
-LLM-backed workflow and need evidence about whether a model migration preserves
-that workflow's contract.
+Application and platform developers who own an LLM-backed workflow and want
+evidence about whether a model upgrade changes that workflow's tool behavior.
 
-## Planned workflow
+Switch is not a general model benchmark, model router, scorer, prompt
+optimizer, dataset manager, or agent orchestrator. It has no LLM judge. It is
+also distinct from Fusion.
 
-1. Describe a baseline model, candidate model, tools, and workflow preconditions.
-2. Add representative fixtures without secrets or production customer data.
-3. Compare saved baseline and candidate responses offline.
-4. Review check-level results and unresolved `not-tested` cases.
-5. Optionally enable live adapters after costs, credentials, and data handling are
-   understood.
+## Advanced: offline `check` of saved responses
 
-## Quick start (offline)
+`switch check` is the original Milestone 0 checker. It compares saved
+baseline and candidate responses in JSON fixtures against explicit
+expectations. It returns `pass`, `fail`, or `not-tested` for tool name, tool
+arguments, structured output, and deterministic outcome assertions. It makes no
+network calls.
+
+### Quick start (offline)
 
 Requires Node.js 22 or newer.
 
 ```bash
-git clone https://github.com/inseat-labs/inseat-switch.git
-cd inseat-switch
+git clone https://github.com/inseat-labs/switch.git
+cd switch
 npm ci
 npm test
 npm run check:examples
@@ -72,7 +216,7 @@ Everything runs offline. No provider credentials, network calls, or paid API usa
 are involved. See [ROADMAP.md](ROADMAP.md) for acceptance criteria and
 [docs/PRODUCT_PLAN.md](docs/PRODUCT_PLAN.md) for the product boundary.
 
-## Fixture format (v1)
+## Fixture format for `check` (v1)
 
 A fixture is one JSON file describing one workflow case:
 
@@ -180,9 +324,10 @@ Missing evidence produces `not-tested`, never an implicit `pass`. See
 
 ## Architecture
 
-The implementation is one TypeScript package with focused modules under `src/`
-for config schema, fixtures, adapters, checks, runner, report generation, and the
-CLI. See [ARCHITECTURE.md](ARCHITECTURE.md).
+The implementation is one TypeScript package. `compare` lives in `src/compare`
+(config, import, behavior normalization, diff engine, cache, runner),
+`src/providers`, and `src/report/compare-*`. `check` uses the fixture, adapter,
+check, and runner modules. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Project documents
 
@@ -199,6 +344,6 @@ CLI. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## License and independence
 
-Inseat Switch is open source under the Apache License 2.0; see
-[LICENSE](LICENSE). Inseat Switch is not affiliated with or endorsed by any model
+Switch is open source under the Apache License 2.0; see
+[LICENSE](LICENSE). Switch is not affiliated with or endorsed by any model
 provider or other vendor referenced in this repository.

@@ -1,6 +1,6 @@
 # Contributing
 
-Inseat Switch is in early development. A Milestone 0 offline checker exists.
+Switch is in early development. A Milestone 0 offline checker exists.
 
 ## Development
 

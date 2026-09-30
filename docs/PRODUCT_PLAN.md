@@ -38,7 +38,7 @@ produces an inspectable report. Live calls come later and require explicit opt-i
 - Orchestrating agents or executing arbitrary workflows
 - Replacing domain-specific human review
 - Guaranteeing equivalent behavior outside supplied fixtures and checks
-- Reproducing Inseat Fusion
+- Reproducing Fusion
 
 ## Validation plan
 
@@ -50,7 +50,7 @@ process is understood.
 For a manual workflow study, work with 3 to 5 participants to:
 
 1. Select one real but sanitized workflow and 10 to 30 representative cases.
-2. Capture baseline and candidate responses outside Inseat Switch.
+2. Capture baseline and candidate responses outside Switch.
 3. Manually apply the proposed checks and result semantics.
 4. Measure setup time, disputed results, missing checks, and whether the report
    would alter a release decision.

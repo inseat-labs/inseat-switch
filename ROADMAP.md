@@ -1,9 +1,31 @@
 # Roadmap
 
-Milestone 0 has a working starter implementation (see docs/HANDOFF.md). Later
-milestones are plans.
+Milestone 0 (`check`) has a working starter implementation (see
+docs/HANDOFF.md). The `compare` snapshot workflow (Unreleased) covers most of
+Milestones 1 and 2. Everything else is a plan.
 
-## Milestone 0: Offline compatibility core
+## Now: `compare` snapshot tests (Unreleased)
+
+Implemented:
+
+- `init` and `compare` with YAML/JSON config, `provider:model` ids, and prompt,
+  messages, or imported JSONL cases.
+- `claude-cli` (prompted tool mode), `anthropic`, and `openai`-compatible
+  providers. Missing keys or a missing CLI exit `2` before any call.
+- Repeat sampling with a majority/minority consistency rule, explicit `flaky`,
+  and tool-behavior categories.
+- Disk cache, JSON report, and a self-contained HTML report.
+
+Open:
+
+- Redaction of secrets and personal data in reports. For example, Claude Code
+  injects the account email into the `claude-cli` context.
+- Non-English clarification and refusal heuristics.
+- Multi-step agent loops with user-supplied tool results.
+- Cost and token reporting per model.
+- More repeat-aware statistics than a majority rule (e.g. confidence at small N).
+
+## Milestone 0: Offline compatibility core (`check`)
 
 Status: mostly implemented. Workflow-precondition checks remain open.
 Deterministic outcome assertions with explicit `not-tested` were added on
@@ -27,6 +49,9 @@ model scoring.
 
 ## Milestone 1: Local developer workflow
 
+Status: mostly covered by `compare` (many cases, per-case evidence in reports).
+Versioning rules and redaction remain open.
+
 Acceptance criteria:
 
 - Multiple fixtures can be selected and evaluated locally.
@@ -35,6 +60,10 @@ Acceptance criteria:
 - Secret and sensitive-field redaction behavior is tested.
 
 ## Milestone 2: Opt-in live adapters
+
+Status: partly covered by `compare` providers. Provider failures become explicit
+`error` samples, never passes, and cached responses support replay. Documenting
+per-provider data transmission and cost is still open.
 
 Acceptance criteria:
 

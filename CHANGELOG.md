@@ -4,6 +4,43 @@ All notable changes to this project are documented here. The project follows
 [Semantic Versioning](https://semver.org/); while the version is `0.x`, any
 release may contain breaking changes.
 
+## Unreleased
+
+### Added
+
+- `switch compare [switch.yaml]`: snapshot tests for model upgrades. Runs
+  every case on a baseline and a candidate model `repeat` times. It reports
+  consistent tool-behavior changes (`tool-dropped`, `tool-added`,
+  `tool-switched`, `arg-added`, `arg-removed`, `arg-value-changed`,
+  `args-invalid`, `acted-instead-of-asking`, `asked-instead-of-acting`,
+  `refused`, `output-unparseable`, `text-only-change`). Differences that are not
+  consistent are reported as `flaky` and do not fail the run.
+  Exit codes: `0` no regression, `1` regression or unsampled case, `2` invalid
+  config, credentials, or flags.
+- `switch init`: writes a commented starter `switch.yaml` and refuses
+  to overwrite an existing one.
+- YAML/JSON config with `provider:model` ids, `system`, OpenAI function-style
+  `tools`, and cases given as `prompt`, `messages`, or `import`.
+- Providers: `claude-cli` (Claude Code login, prompted JSON tool mode),
+  `anthropic` (Messages API, native tools), `openai` (Chat Completions, native
+  tools, `OPENAI_BASE_URL` for compatible servers).
+- Import of recorded OpenAI chat-completions JSONL. Recorded responses become
+  extra baseline samples.
+- On-disk response cache in `.switch-cache/` and a `--no-cache` flag.
+- Terminal summary, `--json <file>` report (`reportVersion: 1`, `kind:
+  "compare"`), and a self-contained escaped HTML report with side-by-side
+  samples.
+- Real example in `examples/compare/` (Sonnet vs Haiku via `claude-cli`).
+- `prepare` script so `npx github:inseat-labs/switch` builds on install.
+- Dependency: `yaml`.
+
+### Changed
+
+- Renamed to switch: package `@inseat-labs/switch`, bin `switch`, repository
+  `inseat-labs/switch` (previously `inseat-switch`).
+- `main()` in `src/cli/main.ts` accepts an optional I/O and provider-factory
+  argument (used by tests). The behavior of `check` is unchanged.
+
 ## 0.1.0 - 2026-09-26
 
 First tagged release of the Milestone 0 offline starter. Early-stage: fixture
